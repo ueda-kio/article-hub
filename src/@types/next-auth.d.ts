@@ -10,15 +10,15 @@ declare module 'next-auth' {
       // times: string;
     } & DefaultSession['user'];
   }
-  interface Profile {
-    picture?: string;
-  }
+  // interface Profile {
+  //   picture?: string;
+  // }
 }
 
 declare module 'next-auth/jwt' {
   interface JWT {
     id: string;
-    username: string;
+    // username: string;
     // qiita: string;
     // zenn: string;
     // times: string;
