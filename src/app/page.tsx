@@ -1,12 +1,17 @@
-"use client";
-import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { authOptions } from '@/auth';
+import { getServerSession } from 'next-auth';
+import Link from 'next/link';
 
-export default function Home() {
-  const { data: session } = useSession();
-  useEffect(() => {
-    console.log(session?.user);
-  }, [session]);
+export default async function Home() {
+  const session = await getServerSession(authOptions);
 
-  return <></>;
+  return (
+    <>
+      <p>
+        <Link href="/hoge">hoge</Link>
+      </p>
+      <span>server session: </span>
+      <pre>{JSON.stringify(session, null, 2)}</pre>
+    </>
+  );
 }
