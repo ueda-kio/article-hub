@@ -30,7 +30,7 @@ async function action(params: FormData) {
   });
 }
 
-export default async function Page() {
+export default async function Form() {
   return (
     <>
       <form action={action as any}>
