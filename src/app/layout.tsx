@@ -6,6 +6,7 @@
 import Provider from '@/components/Provider';
 import type { Metadata } from 'next';
 import { Session } from 'next-auth';
+import Link from 'next/link';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -21,6 +22,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Provider>
           {/* サインインしていない場合はサインインへの導線を表示。 */}
           {/* また、サインインしている場合はサインアウトへの導線を表示。 */}
+          <header>
+            <h1>
+              <Link href="/">Article Hub</Link>
+            </h1>
+          </header>
           <nav>
             <ul>
               <li>
