@@ -35,24 +35,6 @@ export async function POST(req: NextRequest) {
       });
     });
 
-    // await prisma.article.deleteMany({ where: { creatorId: uid } });
-
-    // await Promise.all(
-    //   articles.map((article) => {
-    //     return prisma.article.create({
-    //       data: {
-    //         site: article.site,
-    //         title: article.title,
-    //         url: article.url,
-    //         likes_count: article.likes_count,
-    //         publish: article.publish,
-    //         created_at: article.created_at,
-    //         creatorId: uid,
-    //       },
-    //     });
-    //   }),
-    // );
-
     return NextResponse.json({ ok: true });
   } catch (e) {
     console.error(e);

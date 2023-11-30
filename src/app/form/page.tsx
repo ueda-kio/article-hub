@@ -1,11 +1,8 @@
-// 簡易的なform要素を含んだNext.jsページ
-// server componentとして動作する
-
 import { authOptions } from '@/auth';
-import { getQiitaArticles } from '@/lib/getArticles';
+import { getQiitaArticles, getZennArticles } from '@/lib/getArticles';
 import { getServerSession } from 'next-auth';
 
-async function action(params: FormData, uid: string) {
+async function action(params: FormData) {
   'use server';
 
   const session = await getServerSession(authOptions);
@@ -16,16 +13,16 @@ async function action(params: FormData, uid: string) {
 
   const qiitaUname = table['qiita'] ?? '';
   const zennUname = table['zenn'] ?? '';
-  if (qiitaUname === '' && zennUname === '') return true;
+  if (qiitaUname === '' && zennUname === '') return;
 
-  const qiitaArticles = await getQiitaArticles(qiitaUname, uid);
-  if (qiitaArticles === false) return;
+  // qiitaとzennがっちゃんこした配列
+  const articles = (await Promise.all([getQiitaArticles(qiitaUname, id), getZennArticles(zennUname, id)])).flat();
 
   await fetch('http://localhost:3000/api/article', {
     method: 'POST',
     body: JSON.stringify({
       uid: id,
-      articles: qiitaArticles,
+      articles,
     }),
     next: {
       tags: ['articles'],

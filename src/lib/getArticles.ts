@@ -1,13 +1,19 @@
-import { NextResponse } from 'next/server';
-
+/**
+ * 渡されたQiitaのユーザー名から記事一覧を取得する。
+ * @param {string} qiitaUname Qiitaのユーザー名
+ * @param {string} uid ユーザーID
+ * @returns {Promise<import('@prisma/client').ArticleCreateInput[]>}
+ */
 export async function getQiitaArticles(qiitaUname: FormDataEntryValue, uid: string) {
-  try {
-    const token = process.env.QIITA_TOKEN;
-    if (typeof token === 'undefined') {
-      console.error('Access Token is undefined.');
-      return false;
-    }
+  const token = process.env.QIITA_TOKEN;
+  if (typeof token === 'undefined') {
+    console.error('Access Token is undefined.');
+    return [];
+  }
 
+  if (qiitaUname === '') return [];
+
+  try {
     const res = await fetch(`https://qiita.com/api/v2/users/${qiitaUname}/items?page=1&per_page=100`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -40,11 +46,18 @@ export async function getQiitaArticles(qiitaUname: FormDataEntryValue, uid: stri
     return articles;
   } catch (e) {
     console.error(e);
-    return false;
+    return [];
   }
 }
 
+/**
+ * 渡されたZennのユーザー名から記事一覧を取得する。
+ * @param {string} zennUname Zennのユーザー名
+ * @param {string} uid ユーザーID
+ * @returns {Promise<import('@prisma/client').ArticleCreateInput[]>}
+ */
 export async function getZennArticles(zennUname: FormDataEntryValue, uid: string) {
+  if (zennUname === '') return [];
   const baseUrl = 'https://zenn.dev/';
   const endpoint = `${baseUrl}api/articles?username=${zennUname}`;
 
@@ -54,11 +67,12 @@ export async function getZennArticles(zennUname: FormDataEntryValue, uid: string
         path?: string;
         title?: string;
         liked_count?: number;
+        published_at?: string;
       }[];
     };
     const articles = feed.articles
       .map((item) => {
-        const { path, title, liked_count } = item;
+        const { path, title, liked_count, published_at } = item;
         if (typeof path !== 'string' || typeof title !== 'string' || typeof liked_count !== 'number') return false;
 
         return {
@@ -67,6 +81,7 @@ export async function getZennArticles(zennUname: FormDataEntryValue, uid: string
           url: `${baseUrl}${path}`,
           likes_count: liked_count,
           publish: true,
+          created_at: published_at,
           creatorId: uid,
         } as const;
       })
@@ -75,6 +90,6 @@ export async function getZennArticles(zennUname: FormDataEntryValue, uid: string
     return articles;
   } catch (e) {
     console.error(e);
-    return false;
+    return [];
   }
 }
