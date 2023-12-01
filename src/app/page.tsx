@@ -8,9 +8,13 @@ export default async function Home() {
 
   return (
     <>
-      <p>
-        <Link href="/hoge">hoge</Link>
-      </p>
+      <br />
+      <ul>
+        <li>
+          <Link href="/hoge">hoge</Link>
+        </li>
+      </ul>
+      <br />
       <span>server session: </span>
       <pre>{JSON.stringify(session, null, 2)}</pre>
       {/* @ts-expect-error Server Component */}

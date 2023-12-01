@@ -1,27 +1,28 @@
 import { authOptions } from '@/auth';
 import { getQiitaArticles, getZennArticles } from '@/lib/getArticles';
+import { Site } from '@prisma/client';
 import { getServerSession } from 'next-auth';
 
-async function action(params: FormData) {
-  'use server';
-
+async function run(params: FormData, site: Site) {
   const session = await getServerSession(authOptions);
   const id = session?.user?.id ?? '';
 
-  const dataArr = params.entries();
-  const table = Object.fromEntries(dataArr);
+  const uname = params.get(site);
+  if (uname === null) return;
 
-  const qiitaUname = table['qiita'] ?? '';
-  const zennUname = table['zenn'] ?? '';
-  if (qiitaUname === '' && zennUname === '') return;
+  fetch(`http://localhost:3000/api/user/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      [site]: uname,
+    }),
+  });
 
-  // qiitaとzennがっちゃんこした配列
-  const articles = (await Promise.all([getQiitaArticles(qiitaUname, id), getZennArticles(zennUname, id)])).flat();
-
-  await fetch('http://localhost:3000/api/article', {
+  const articles = await (async () => (site === 'qiita' ? await getQiitaArticles(uname, id) : getZennArticles(uname, id)))();
+  fetch('http://localhost:3000/api/article', {
     method: 'POST',
     body: JSON.stringify({
       uid: id,
+      site: site,
       articles,
     }),
     next: {
@@ -30,23 +31,37 @@ async function action(params: FormData) {
   });
 }
 
-export default async function Form() {
+async function setQiitaUname(params: FormData) {
+  'use server';
+  run(params, 'qiita');
+}
+
+async function setZennUname(params: FormData) {
+  'use server';
+
+  run(params, 'zenn');
+}
+
+export default async function Form({ qiita, zenn }: { qiita: string | null; zenn: string | null }) {
   return (
     <>
-      <form action={action as any}>
+      <form action={setQiitaUname as any}>
         <p>
           <label>
             <span>qiita: </span>
-            <input type="text" name="qiita" className="bg-gray-800 text-white" />
+            <input type="text" name="qiita" defaultValue={qiita ?? ''} className="bg-gray-800 text-white py-2 px-4 rounded" />
           </label>
+          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Submit</button>
         </p>
+      </form>
+      <form action={setZennUname as any}>
         <p>
           <label>
             <span>zenn: </span>
-            <input type="text" name="zenn" className="bg-gray-800 text-white" />
+            <input type="text" name="zenn" defaultValue={zenn ?? ''} className="bg-gray-800 text-white py-2 px-4 rounded" />
           </label>
+          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Submit</button>
         </p>
-        <button type="submit">Submit</button>
       </form>
     </>
   );

@@ -1,6 +1,5 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prismaClient';
 
-const prisma = new PrismaClient();
 async function main() {
   const user = await prisma.user.create({
     data: {
