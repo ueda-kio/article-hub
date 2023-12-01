@@ -1,6 +1,5 @@
 import { authOptions } from '@/auth';
 import { getServerSession } from 'next-auth';
-import Link from 'next/link';
 import List from './List';
 
 export default async function Home() {
@@ -8,13 +7,16 @@ export default async function Home() {
 
   return (
     <>
-      <br />
-      <ul>
-        <li>
-          <Link href="/hoge">hoge</Link>
-        </li>
-      </ul>
-      <br />
+      <nav>
+        <ul>
+          <li>
+            <a href="/api/auth/signin">Sign in</a>
+          </li>
+          <li>
+            <a href="/api/auth/signout">Sign out</a>
+          </li>
+        </ul>
+      </nav>
       <span>server session: </span>
       <pre>{JSON.stringify(session, null, 2)}</pre>
       {/* @ts-expect-error Server Component */}

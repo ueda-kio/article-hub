@@ -5,7 +5,6 @@
 
 import Provider from '@/components/Provider';
 import type { Metadata } from 'next';
-import { Session } from 'next-auth';
 import Link from 'next/link';
 import './globals.css';
 
@@ -27,16 +26,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link href="/">Article Hub</Link>
             </h1>
           </header>
-          <nav>
-            <ul>
-              <li>
-                <a href="/api/auth/signin">Sign in</a>
-              </li>
-              <li>
-                <a href="/api/auth/signout">Sign out</a>
-              </li>
-            </ul>
-          </nav>
           {children}
         </Provider>
       </body>
