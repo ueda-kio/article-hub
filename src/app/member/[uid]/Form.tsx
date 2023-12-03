@@ -2,6 +2,7 @@ import { authOptions } from '@/auth';
 import { getQiitaArticles, getZennArticles } from '@/lib/getArticles';
 import { Site } from '@prisma/client';
 import { getServerSession } from 'next-auth';
+import { revalidatePath, revalidateTag } from 'next/cache';
 
 async function run(params: FormData, site: Site) {
   const session = await getServerSession(authOptions);
@@ -33,13 +34,17 @@ async function run(params: FormData, site: Site) {
 
 async function setQiitaUname(params: FormData) {
   'use server';
-  run(params, 'qiita');
+  await run(params, 'qiita');
+  revalidateTag('articles');
+  // revalidatePath('/member/[uid]', 'page');
 }
 
 async function setZennUname(params: FormData) {
   'use server';
 
-  run(params, 'zenn');
+  await run(params, 'zenn');
+  revalidateTag('articles');
+  // revalidatePath('/member/[uid]', 'page');
 }
 
 export default async function Form({ qiita, zenn }: { qiita: string | null; zenn: string | null }) {
