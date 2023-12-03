@@ -20,11 +20,11 @@ export default async function List() {
   // return <>{<pre>{JSON.stringify(user, null, 2)}</pre>}</>;
   return (
     <>
-      <section className="p-4 m-2 bg-gray-200">
-        <h2 className="text-lg font-bold mb-2">article</h2>
-        <ul>
+      <section className="mt-4">
+        <h2 className="text-xl font-semibold">article</h2>
+        <ul className="list-disc m-4 pl-4">
           {articles.map((article: any) => (
-            <li key={article.id} className="mb-1">
+            <li key={article.id}>
               <Link href={article.url} target="_blank" passHref className="text-blue-500 hover:underline">
                 {article.title}
               </Link>
@@ -32,12 +32,15 @@ export default async function List() {
           ))}
         </ul>
       </section>
-      <hr />
-      <section>
-        <h2>user</h2>
-        <ul>
+      <section className="mt-4">
+        <h2 className="text-xl font-semibold">user</h2>
+        <ul className="list-disc m-4 pl-4">
           {user.map((user: any) => (
-            <li key={user.id}>{user.name}</li>
+            <li key={user.id}>
+              <Link href={`/member/${user.id}`} className="text-blue-500 hover:underline">
+                {user.name}
+              </Link>
+            </li>
           ))}
         </ul>
         <Link href="/member">membersページへ →</Link>
