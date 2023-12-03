@@ -15,7 +15,9 @@ export default async function MembersList() {
         <h2>user</h2>
         <ul>
           {user.map((user) => (
-            <Link href={`/member/${user.id}`}>{user.name}</Link>
+            <li key={user.id}>
+              <Link href={`/member/${user.id}`}>{user.name}</Link>
+            </li>
           ))}
         </ul>
       </section>
