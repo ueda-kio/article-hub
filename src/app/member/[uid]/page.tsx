@@ -1,15 +1,30 @@
-import { User } from '@prisma/client';
+import { Article, User } from '@prisma/client';
 import ArticleList from './ArticleList';
 import Form from './Form';
 
 const getUser = async () => {
-  const res = await fetch('http://localhost:3000/api/user');
+  const res = await fetch('http://localhost:3000/api/user', {
+    next: {
+      tags: ['users'],
+    },
+  });
   const json = await res.json();
   return json.users as User[];
 };
 
+const getArticles = async (uid: string) => {
+  const res = await fetch(`http://localhost:3000/api/article?uid=${uid}`, {
+    next: {
+      tags: ['articles'],
+    },
+  });
+  const json = await res.json();
+  return json.articles as Article[];
+};
+
 export default async function UserDetail({ params }: { params: { uid: string } }) {
   const users = await getUser();
+  const articles = await getArticles(params.uid);
   const user = users.find((user) => user.id === params.uid);
   if (!user) return <p>user not found</p>;
   return (
@@ -24,8 +39,7 @@ export default async function UserDetail({ params }: { params: { uid: string } }
       <br />
       <section>
         <h2 className="text-xl font-semibold">Articles</h2>
-        {/* @ts-expect-error Server Component */}
-        <ArticleList uid={user.id} />
+        <ArticleList articles={articles} />
       </section>
     </>
   );
