@@ -13,7 +13,7 @@ const getUser = async () => {
 };
 
 const getArticles = async (uid: string) => {
-  const res = await fetch(`http://localhost:3000/api/article?uid=${uid}`, {
+  const res = await fetch(`http://localhost:3000/api/article?creatorId=${uid}`, {
     next: {
       tags: ['articles'],
     },
@@ -39,7 +39,7 @@ export default async function UserDetail({ params }: { params: { uid: string } }
       <br />
       <section>
         <h2 className="text-xl font-semibold">Articles</h2>
-        <ArticleList articles={articles} />
+        <ArticleList fallback={articles} uid={user.id} />
       </section>
     </>
   );

@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
   try {
-    const uid = req.nextUrl.searchParams.get('uid');
+    const uid = req.nextUrl.searchParams.get('creatorId');
     if (uid) {
       const articles = await prisma.article.findMany({
         where: { creatorId: uid },

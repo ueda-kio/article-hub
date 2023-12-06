@@ -1,49 +1,21 @@
 'use client';
 
+import useArticles, { articleSWRKey } from '@/hooks/useArticles';
 import { userRevalidateTag } from '@/hooks/useRevalidate';
 import { Article } from '@prisma/client';
 import Link from 'next/link';
 import { useState } from 'react';
+import { SWRConfig } from 'swr';
 
-function List({
-  isPublish,
-  articles,
-  handleClickToggleButton,
-}: {
-  isPublish: boolean;
-  articles: Article[];
-  handleClickToggleButton: (id: string, publish: boolean) => Promise<void>;
-}) {
-  return (
-    <section>
-      <h2 className="text-2xl font-bold">{isPublish || '非'}表示リスト</h2>
-      <ul>
-        {!articles.length ? (
-          <>リストはありません！</>
-        ) : (
-          articles.map((article) => (
-            <li key={article.id}>
-              <button
-                onClick={() => handleClickToggleButton(article.id, isPublish)}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              >
-                {isPublish && '非'}表示
-              </button>
-              <Link href={article.url} target="_blank" passHref>
-                {article.title}
-              </Link>
-            </li>
-          ))
-        )}
-      </ul>
-    </section>
-  );
-}
+function _ArticleList({ uid }: { uid: string }) {
+  const { data: articles, mutate } = useArticles(uid);
+  const [publishList, setPublishList] = useState<Article[]>([]);
+  const [unpublishList, setUnpublishList] = useState<Article[]>([]);
 
-export default function ArticleList({ articles }: { articles: Article[] }) {
-  // TODO: クライアント側でfetchするほうがよりリアルタイム反映となりよいかも
-  const [publishList, setPublishList] = useState(articles.filter((article) => article.publish));
-  const [unpublishList, setUnpublishList] = useState(articles.filter((article) => !article.publish));
+  if (articles && !publishList.length && !unpublishList.length) {
+    setPublishList(articles.filter((article) => article.publish));
+    setUnpublishList(articles.filter((article) => !article.publish));
+  }
 
   const handleClickToggleButton = async (id: string, publish: boolean) => {
     if (publish) {
@@ -60,17 +32,68 @@ export default function ArticleList({ articles }: { articles: Article[] }) {
       }
     }
 
-    await fetch(`http://localhost:3000/api/article/${id}`, {
+    await fetch(`/api/article/${id}`, {
       method: 'PATCH',
       body: JSON.stringify({ publish: !publish }),
     });
     userRevalidateTag('articles');
+    mutate();
   };
 
   return (
     <>
-      <List isPublish={true} articles={publishList} handleClickToggleButton={handleClickToggleButton} />
-      <List isPublish={false} articles={unpublishList} handleClickToggleButton={handleClickToggleButton} />
+      <section>
+        <h2 className="text-2xl font-bold">表示リスト</h2>
+        <ul>
+          {publishList.length ? (
+            publishList.map((article) => (
+              <li key={article.id}>
+                <button
+                  onClick={() => handleClickToggleButton(article.id, true)}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
+                  非表示
+                </button>
+                <Link href={article.url} target="_blank" passHref>
+                  {article.title}
+                </Link>
+              </li>
+            ))
+          ) : (
+            <>リストはありません！</>
+          )}
+        </ul>
+      </section>
+      <section>
+        <h2 className="text-2xl font-bold">非表示リスト</h2>
+        <ul>
+          {unpublishList.length ? (
+            unpublishList.map((article) => (
+              <li key={article.id}>
+                <button
+                  onClick={() => handleClickToggleButton(article.id, false)}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
+                  表示
+                </button>
+                <Link href={article.url} target="_blank" passHref>
+                  {article.title}
+                </Link>
+              </li>
+            ))
+          ) : (
+            <>リストはありません！</>
+          )}
+        </ul>
+      </section>
     </>
+  );
+}
+
+export default function ArticleList({ fallback, uid }: { fallback: Article[]; uid: string }) {
+  return (
+    <SWRConfig value={{ fallback: { [articleSWRKey(uid)]: fallback } }}>
+      <_ArticleList uid={uid} />
+    </SWRConfig>
   );
 }
