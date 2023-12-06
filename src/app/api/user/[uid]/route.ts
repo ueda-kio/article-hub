@@ -15,11 +15,11 @@ export async function PUT(req: NextRequest, { params }: { params: { uid: string 
 
   // TODO: オブジェクトからundefinedなプロパティを削除する
   const data = (() => {
-    if (qiita && zenn) {
+    if (typeof qiita !== 'undefined' && typeof zenn !== 'undefined') {
       return { qiita, zenn };
-    } else if (qiita) {
+    } else if (typeof qiita !== 'undefined') {
       return { qiita };
-    } else if (zenn) {
+    } else if (typeof zenn !== 'undefined') {
       return { zenn };
     } else {
       return {};
