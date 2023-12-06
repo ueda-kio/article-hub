@@ -4,17 +4,18 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
   try {
-    // リクエストのパラメータにuidが含まれている場合、そのユーザーの記事を返す
-    // リクエストのパラメータにuidが含まれていない場合、全ての記事を返す
     const uid = req.nextUrl.searchParams.get('uid');
     if (uid) {
       const articles = await prisma.article.findMany({
         where: { creatorId: uid },
+        orderBy: { created_at: 'desc' },
       });
       return NextResponse.json({ ok: true, articles });
     }
 
-    const articles = await prisma.article.findMany();
+    const articles = await prisma.article.findMany({
+      orderBy: { created_at: 'desc' },
+    });
     return NextResponse.json({ ok: true, articles });
   } catch (e) {
     console.error(e);

@@ -16,6 +16,9 @@ async function run(params: FormData, site: Site) {
     body: JSON.stringify({
       [site]: uname,
     }),
+    next: {
+      tags: ['users'],
+    },
   });
 
   const articles = await (async () => (site === 'qiita' ? await getQiitaArticles(uname, id) : getZennArticles(uname, id)))();
