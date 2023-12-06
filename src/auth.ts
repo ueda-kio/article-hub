@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prismaClient';
 import { PrismaAdapter } from '@auth/prisma-adapter';
-import NextAuth, { Session, User, type NextAuthOptions } from 'next-auth';
+import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next';
+import NextAuth, { getServerSession as defaultGetServerSession, type NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 
 /**
@@ -38,6 +39,12 @@ export const authOptions: NextAuthOptions = {
     //   return token;
     // },
   },
+};
+
+export const getServerSession = async (
+  ...args: [GetServerSidePropsContext['req'], GetServerSidePropsContext['res']] | [NextApiRequest, NextApiResponse] | []
+) => {
+  return await defaultGetServerSession(...args, authOptions);
 };
 
 export const handler = NextAuth(authOptions);
