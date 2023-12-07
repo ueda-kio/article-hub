@@ -1,11 +1,5 @@
-import { User } from '@prisma/client';
+import { getUsers } from '@/lib/getResources';
 import Link from 'next/link';
-
-const getUsers = async () => {
-  const res = await fetch('http://localhost:3000/api/user');
-  const json = await res.json();
-  return json.users as User[];
-};
 
 export default async function Page() {
   const user = await getUsers();

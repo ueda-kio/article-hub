@@ -1,21 +1,9 @@
-import { Article, User } from '@prisma/client';
+import { getArticles, getUsers } from '@/lib/getResources';
 import Link from 'next/link';
-
-const getUsers = async () => {
-  const res = await fetch('http://localhost:3000/api/user', { next: { tags: ['users'] } });
-  const json = await res.json();
-  return json.users as User[];
-};
-
-const getArticles = async () => {
-  const res = await fetch('http://localhost:3000/api/article', { next: { tags: ['articles'] } });
-  const json = await res.json();
-  return json.articles as Article[];
-};
 
 export default async function List() {
   // TODO: レスポンスの型定義どうする問題
-  const user = await getUsers();
+  const users = await getUsers();
   const articles = await getArticles();
 
   return (
@@ -41,7 +29,7 @@ export default async function List() {
       <section className="mt-4">
         <h2 className="text-xl font-semibold">user</h2>
         <ul className="list-disc m-4 pl-4">
-          {user.map((user) => (
+          {users.map((user) => (
             <li key={user.id}>
               <Link href={`/member/${user.id}`} className="text-blue-500 hover:underline">
                 {user.name}
