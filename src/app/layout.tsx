@@ -1,8 +1,3 @@
-// NextAuthのProviderを使うために必要なレイアウト。サイト全体を囲む。
-// サインインしていない場合はサインインへの導線を表示。
-// また、サインインしている場合はサインアウトへの導線を表示。
-// その他、サイトのメタデータを設定する。
-
 import Provider from '@/components/Provider';
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -16,11 +11,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ja">
-      {/* sessionProviderでラップする */}
       <body>
         <Provider>
-          {/* サインインしていない場合はサインインへの導線を表示。 */}
-          {/* また、サインインしている場合はサインアウトへの導線を表示。 */}
           <header>
             <h1>
               <Link href="/">Article Hub</Link>

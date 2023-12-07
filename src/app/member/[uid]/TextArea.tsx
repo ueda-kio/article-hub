@@ -32,12 +32,13 @@ export default function TextArea({ id, qiita, zenn }: { id: string; qiita: strin
               name="qiita"
               value={qiitaUname}
               onChange={(e) => setQiitaUname(e.target.value)}
-              className="bg-gray-800 text-white py-2 px-4 rounded"
+              className="py-2 px-4 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </label>
           <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Submit</button>
         </p>
       </form>
+      <br />
       <form name="zenn" onSubmit={handleSubmit}>
         <p>
           <label>
@@ -47,7 +48,7 @@ export default function TextArea({ id, qiita, zenn }: { id: string; qiita: strin
               name="zenn"
               value={zennUname}
               onChange={(e) => setZennUname(e.target.value)}
-              className="bg-gray-800 text-white py-2 px-4 rounded"
+              className="py-2 px-4 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </label>
           <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Submit</button>

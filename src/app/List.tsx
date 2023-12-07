@@ -27,7 +27,7 @@ export default async function List() {
             (article) =>
               article.publish && (
                 <li key={article.id}>
-                  <Link href={article.url} target="_blank" passHref>
+                  <Link href={article.url} className="text-blue-500 hover:underline" target="_blank" passHref>
                     {article.title}
                   </Link>
                 </li>
