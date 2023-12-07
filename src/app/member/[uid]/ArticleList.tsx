@@ -1,21 +1,23 @@
 'use client';
 
-import useArticles, { articleSWRKey } from '@/hooks/useArticles';
-import { userRevalidateTag } from '@/hooks/useRevalidate';
+import useArticles from '@/hooks/useArticles';
+import { revalidateTagFromClient } from '@/hooks/useRevalidate';
 import { Article } from '@prisma/client';
 import Link from 'next/link';
-import { useState } from 'react';
-import { SWRConfig } from 'swr';
+import { useEffect, useState } from 'react';
 
-function _ArticleList({ uid }: { uid: string }) {
+export default function ArticleList({ fallback, uid }: { fallback: Article[]; uid: string }) {
   const { data: articles, mutate } = useArticles(uid);
-  const [publishList, setPublishList] = useState<Article[]>([]);
-  const [unpublishList, setUnpublishList] = useState<Article[]>([]);
+  const [publishList, setPublishList] = useState<Article[]>(fallback.filter((article) => article.publish));
+  const [unpublishList, setUnpublishList] = useState<Article[]>(fallback.filter((article) => !article.publish));
 
-  if (articles && !publishList.length && !unpublishList.length) {
-    setPublishList(articles.filter((article) => article.publish));
-    setUnpublishList(articles.filter((article) => !article.publish));
-  }
+  useEffect(() => {
+    if (articles) {
+      setPublishList(articles.filter((article) => article.publish));
+      setUnpublishList(articles.filter((article) => !article.publish));
+    }
+    // console.log('mutate...');
+  }, [articles]);
 
   const handleClickToggleButton = async (id: string, publish: boolean) => {
     if (publish) {
@@ -36,12 +38,19 @@ function _ArticleList({ uid }: { uid: string }) {
       method: 'PATCH',
       body: JSON.stringify({ publish: !publish }),
     });
-    userRevalidateTag('articles');
+    revalidateTagFromClient('articles');
+    // TODO: ここで mutate() する必要ある？
     mutate();
   };
 
   return (
     <>
+      {/* TODO: ローディングアニメーションをつけたい。 */}
+      {/* {isLoading && (
+        <div className="fixed top-0 left-0 w-screen h-screen bg-gray-800 opacity-75 flex justify-center items-center">
+          <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-64 w-64"></div>
+        </div>
+      )} */}
       <section>
         <h2 className="text-2xl font-bold">表示リスト</h2>
         <ul>
@@ -90,10 +99,13 @@ function _ArticleList({ uid }: { uid: string }) {
   );
 }
 
-export default function ArticleList({ fallback, uid }: { fallback: Article[]; uid: string }) {
-  return (
-    <SWRConfig value={{ fallback: { [articleSWRKey(uid)]: fallback } }}>
-      <_ArticleList uid={uid} />
-    </SWRConfig>
-  );
-}
+// fallback をあきらめて手動で初期表示の記事リストを作る
+// export default function ArticleList({ fallback, uid }: { fallback: Article[]; uid: string }) {
+//   const initPublishList = useMemo(() => fallback.filter((article) => article.publish), [fallback]);
+//   const intiUnpublishList = useMemo(() => fallback.filter((article) => !article.publish), [fallback]);
+//   return (
+//     <SWRConfig>
+//       <_ArticleList uid={uid} initPublishList={initPublishList} intiUnpublishList={intiUnpublishList} />
+//     </SWRConfig>
+//   );
+// }

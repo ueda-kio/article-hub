@@ -2,7 +2,7 @@
 
 import { getServerSession } from '@/auth';
 import { Site } from '@prisma/client';
-import { revalidatePath } from 'next/cache';
+import { revalidateTag } from 'next/cache';
 import { getQiitaArticles, getZennArticles } from './getArticles';
 
 export default async function handleSubmitUname(site: Site, uname: string) {
@@ -21,7 +21,7 @@ export default async function handleSubmitUname(site: Site, uname: string) {
     }),
     (async () => {
       const articles = await (async () => (site === 'qiita' ? await getQiitaArticles(uname, uid) : getZennArticles(uname, uid)))();
-      fetch('http://localhost:3000/api/article', {
+      return fetch('http://localhost:3000/api/article', {
         method: 'POST',
         body: JSON.stringify({
           uid,
@@ -34,8 +34,8 @@ export default async function handleSubmitUname(site: Site, uname: string) {
       });
     })(),
   ]).finally(() => {
-    revalidatePath(`/member/${uid}`, 'page');
-    console.log('revalidatePath!');
+    // TODO: id指定してrevalidateする
+    revalidateTag('articles');
   });
   return Promise.resolve();
 }

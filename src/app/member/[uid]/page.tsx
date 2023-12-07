@@ -1,6 +1,5 @@
 import { Article, User } from '@prisma/client';
 import ArticleList from './ArticleList';
-import Form from './Form';
 import TextArea from './TextArea';
 
 const getUser = async () => {
@@ -34,8 +33,6 @@ export default async function UserDetail({ params }: { params: { uid: string } }
       <p>welcome {user.name} !</p>
       <br />
       <section>
-        {/* @ts-expect-error Server Component */}
-        {/* <Form qiita={user.qiita} zenn={user.zenn} /> */}
         <TextArea id={user.id} qiita={user.qiita} zenn={user.zenn} />
       </section>
       <br />
