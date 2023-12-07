@@ -3,6 +3,7 @@ import { PrismaAdapter } from '@auth/prisma-adapter';
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next';
 import NextAuth, { getServerSession as defaultGetServerSession, type NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
+import { revalidateTag } from 'next/cache';
 
 /**
  * @see https://github.com/vercel/next.js/issues/56832
@@ -17,9 +18,8 @@ export const authOptions: NextAuthOptions = {
   ],
   session: { strategy: 'jwt' },
   callbacks: {
-    async signIn({ user }) {
-      // [WIP]: connect DB;
-      user;
+    async signIn() {
+      revalidateTag('users');
       return true;
     },
     /**
