@@ -1,7 +1,7 @@
 'use client';
 
 import { articleSWRKey } from '@/hooks/useArticles';
-import handleSubmitUname from '@/lib/handleSubmitUname';
+import handleSubmitUname from '@/serverActions/handleSubmitUname';
 import { useState } from 'react';
 import { useSWRConfig } from 'swr';
 

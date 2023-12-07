@@ -3,7 +3,7 @@
 import { getServerSession } from '@/auth';
 import { Site } from '@prisma/client';
 import { revalidateTag } from 'next/cache';
-import { getQiitaArticles, getZennArticles } from './getArticles';
+import { getQiitaArticles, getZennArticles } from '../lib/getArticles';
 
 export default async function handleSubmitUname(site: Site, uname: string) {
   const session = await getServerSession();

@@ -1,7 +1,7 @@
 'use client';
 
 import useArticles from '@/hooks/useArticles';
-import { revalidateTagFromClient } from '@/hooks/useRevalidate';
+import { revalidateTagFromClient } from '@/serverActions/revalidate';
 import { Article } from '@prisma/client';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
