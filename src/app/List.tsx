@@ -34,6 +34,9 @@ export default async function List() {
               ),
           )}
         </ul>
+        <Link href="/article" className="text-blue-500 hover:underline">
+          記事一覧ページへ →
+        </Link>
       </section>
       <section className="mt-4">
         <h2 className="text-xl font-semibold">user</h2>
