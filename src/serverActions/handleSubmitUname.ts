@@ -15,9 +15,7 @@ export default async function handleSubmitUname(site: Site, uname: string) {
       body: JSON.stringify({
         [site]: uname,
       }),
-      next: {
-        tags: ['users'],
-      },
+      next: { tags: ['users'] },
     }),
     (async () => {
       const articles = await (async () => (site === 'qiita' ? await getQiitaArticles(uname, uid) : getZennArticles(uname, uid)))();
@@ -28,9 +26,7 @@ export default async function handleSubmitUname(site: Site, uname: string) {
           site,
           articles,
         }),
-        next: {
-          tags: ['articles'],
-        },
+        next: { tags: ['articles'] },
       });
     })(),
   ]).finally(() => {

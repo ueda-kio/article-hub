@@ -6,21 +6,13 @@ import ArticleList from './ArticleList';
 import TextArea from './TextArea';
 
 const getUser = async (uid: string) => {
-  const res = await fetch('http://localhost:3000/api/user', {
-    next: {
-      tags: ['users'],
-    },
-  });
+  const res = await fetch('http://localhost:3000/api/user', { next: { tags: ['users'] } });
   const json = await res.json();
   return (json.users as User[]).find((user) => user.id === uid);
 };
 
 const getArticles = async (uid: string) => {
-  const res = await fetch(`http://localhost:3000/api/article?creatorId=${uid}`, {
-    next: {
-      tags: ['articles'],
-    },
-  });
+  const res = await fetch(`http://localhost:3000/api/article?creatorId=${uid}`, { next: { tags: ['articles'] } });
   const json = await res.json();
   return json.articles as Article[];
 };
