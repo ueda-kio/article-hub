@@ -1,10 +1,6 @@
-import { authOptions } from '@/auth';
-import { getServerSession } from 'next-auth';
 import List from './List';
 
 export default async function Home() {
-  const session = await getServerSession(authOptions);
-
   return (
     <>
       <nav>
@@ -17,8 +13,6 @@ export default async function Home() {
           </li>
         </ul>
       </nav>
-      <span>server session: </span>
-      <pre>{JSON.stringify(session, null, 2)}</pre>
       {/* @ts-expect-error Server Component */}
       <List />
     </>
