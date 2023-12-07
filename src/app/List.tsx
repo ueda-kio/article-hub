@@ -3,13 +3,13 @@ import Link from 'next/link';
 
 export default async function List() {
   // TODO: レスポンスの型定義どうする問題
-  const users = await getUsers();
-  const articles = await getArticles();
+  // const users = await getUsers();
+  // const articles = await getArticles();
 
   return (
     <>
       <section className="mt-4">
-        <h2 className="text-xl font-semibold">article</h2>
+        {/* <h2 className="text-xl font-semibold">article</h2>
         <ul className="list-disc m-4 pl-4">
           {articles.map(
             (article) =>
@@ -39,7 +39,7 @@ export default async function List() {
         </ul>
         <Link href="/member" className="text-blue-500 hover:underline">
           membersページへ →
-        </Link>
+        </Link> */}
       </section>
     </>
   );
