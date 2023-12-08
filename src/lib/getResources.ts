@@ -7,7 +7,7 @@ export const getUsers = async (uid?: string) => {
   try {
     const res = await fetch(url, { next: { tags: [tag] } });
     const json = await res.json();
-    // console.log('users: ', json);
+    console.log('users: ', json);
     return json.users as User[];
   } catch (e) {
     console.error(e);
@@ -21,7 +21,7 @@ export const getArticles = async (creatorId?: string) => {
   try {
     const res = await fetch(url, { next: { tags: [tag] } });
     const json = await res.json();
-    // console.log('articles: ', json);
+    console.log('articles: ', json);
     return json.articles as Article[];
   } catch (e) {
     console.error(e);
