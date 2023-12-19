@@ -32,7 +32,7 @@ export default async function handleSubmitUname(site: Site, uname: string) {
     })(),
   ]).finally(() => {
     revalidateTag('articles');
-    revalidateTag('users');
+    revalidateTag(`users-${uid}`);
   });
   return Promise.resolve();
 }
