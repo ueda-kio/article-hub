@@ -35,6 +35,7 @@ export default function ArticleList({ articles }: { articles: Article[] }) {
 
   return (
     <>
+      {/* TODO: select は loading させる必要ないから別コンポーネントに切り出す？ */}
       <select
         value={sortOption}
         onChange={handleSortChange}

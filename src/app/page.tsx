@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import List from './List';
 
 export default async function Home() {
@@ -13,8 +14,11 @@ export default async function Home() {
           </li>
         </ul>
       </nav>
-      {/* @ts-expect-error Server Component */}
-      <List />
+      {/* TODO: loading */}
+      <Suspense fallback={<>loading...</>}>
+        {/* @ts-expect-error Server Component */}
+        <List />
+      </Suspense>
     </>
   );
 }
