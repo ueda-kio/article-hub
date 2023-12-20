@@ -2,6 +2,7 @@ import Provider from '@/components/Provider';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import './globals.css';
+import Header from '@/components/Header';
 
 export const metadata: Metadata = {
   title: 'Article Hub',
@@ -13,12 +14,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ja">
       <body>
         <Provider>
-          <header>
-            <h1>
-              <Link href="/">Article Hub</Link>
-            </h1>
-          </header>
-          {children}
+          <Header />
+          <main className="container mx-auto my-4 px-4">{children}</main>
         </Provider>
       </body>
     </html>
