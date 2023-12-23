@@ -1,8 +1,7 @@
 import { Article } from '@prisma/client';
 import useSWR, { Fetcher } from 'swr';
 
-/** `/api/article?creatorId=${creatorId}` */
-export const articleSWRKey = (creatorId: string) => `/api/article?creatorId=${creatorId}`;
+export const articleSWRKey = (creatorId: string) => `/api/article?creatorId=${creatorId}` as const;
 
 export default function useArticles(creatorId: string) {
   const fetcher: Fetcher<Article[], string> = async (url) => {
