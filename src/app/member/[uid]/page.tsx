@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ArticleList from './ArticleList';
 import TextArea from './TextArea';
+import MyPage from './MyPage';
 
 const getSessionId = async () => {
   const session = await getServerSession();
@@ -24,16 +25,7 @@ export default async function UserDetail({ params }: { params: { uid: string } }
       <h1 className="text-2xl font-bold">{isMyPage ? `おかえり！${user.name}` : `${user.name}のページだよ`}</h1>
       <br />
       {isMyPage ? (
-        <>
-          <section>
-            <TextArea id={user.id} qiita={user.qiita} zenn={user.zenn} />
-          </section>
-          <br />
-          <section>
-            <h2 className="text-xl font-semibold">Articles</h2>
-            <ArticleList fallback={articles} uid={user.id} />
-          </section>
-        </>
+        <MyPage user={user} articles={articles} />
       ) : (
         <>
           {articles.map(
