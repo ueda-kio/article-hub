@@ -96,8 +96,7 @@ export default function ArticleList({
       method: 'PATCH',
       body: JSON.stringify({ publish: !publish }),
     });
-    revalidateTagFromClient('article');
-    revalidateTagFromClient(`article-${id}`);
+    revalidateTagFromClient('articles');
     mutate();
   };
 
