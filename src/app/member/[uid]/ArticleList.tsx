@@ -5,6 +5,41 @@ import { Article } from '@prisma/client';
 import Link from 'next/link';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
+function List({
+  articleList,
+  isPublish,
+  handleClickToggleButton,
+}: {
+  articleList: Article[];
+  isPublish: boolean;
+  handleClickToggleButton: (id: string, publish: boolean) => void;
+}) {
+  return (
+    <section>
+      <h2 className="text-2xl font-bold">{isPublish ? undefined : '非'}表示リスト</h2>
+      <ul>
+        {articleList.length ? (
+          articleList.map((article) => (
+            <li key={article.id}>
+              <button
+                onClick={() => handleClickToggleButton(article.id, isPublish)}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                非表示
+              </button>
+              <Link href={article.url} target="_blank" passHref>
+                {article.title}
+              </Link>
+            </li>
+          ))
+        ) : (
+          <>リストはありません！</>
+        )}
+      </ul>
+    </section>
+  );
+}
+
 export default function ArticleList({
   fallback,
   uid,
@@ -71,50 +106,9 @@ export default function ArticleList({
           <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-64 w-64"></div>
         </div>
       )}
-      <section>
-        <h2 className="text-2xl font-bold">表示リスト</h2>
-        <ul>
-          {articleLists.publishList.length ? (
-            articleLists.publishList.map((article) => (
-              <li key={article.id}>
-                <button
-                  onClick={() => handleClickToggleButton(article.id, true)}
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                >
-                  非表示
-                </button>
-                <Link href={article.url} target="_blank" passHref>
-                  {article.title}
-                </Link>
-              </li>
-            ))
-          ) : (
-            <>リストはありません！</>
-          )}
-        </ul>
-      </section>
-      <section>
-        <h2 className="text-2xl font-bold">非表示リスト</h2>
-        <ul>
-          {articleLists.unpublishList.length ? (
-            articleLists.unpublishList.map((article) => (
-              <li key={article.id}>
-                <button
-                  onClick={() => handleClickToggleButton(article.id, false)}
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                >
-                  表示
-                </button>
-                <Link href={article.url} target="_blank" passHref>
-                  {article.title}
-                </Link>
-              </li>
-            ))
-          ) : (
-            <>リストはありません！</>
-          )}
-        </ul>
-      </section>
+      <List articleList={articleLists.publishList} isPublish={true} handleClickToggleButton={handleClickToggleButton} />
+      <br />
+      <List articleList={articleLists.unpublishList} isPublish={false} handleClickToggleButton={handleClickToggleButton} />
     </div>
   );
 }
