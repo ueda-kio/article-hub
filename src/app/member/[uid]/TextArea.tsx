@@ -44,7 +44,12 @@ export default function TextArea({
               className="py-2 px-4 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </label>
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Submit</button>
+          <button
+            disabled={qiitaUname === qiita}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:bg-gray-300 disabled:cursor-default"
+          >
+            Submit
+          </button>
         </p>
       </form>
       <br />
@@ -60,7 +65,12 @@ export default function TextArea({
               className="py-2 px-4 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </label>
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Submit</button>
+          <button
+            disabled={zennUname === zenn}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:bg-gray-300 disabled:cursor-default"
+          >
+            Submit
+          </button>
         </p>
       </form>
     </>
