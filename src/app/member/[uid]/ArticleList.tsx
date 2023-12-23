@@ -1,6 +1,7 @@
 'use client';
 
 import useArticles from '@/hooks/useArticles';
+import { revalidateTagFromClient } from '@/serverActions/revalidate';
 import { Article } from '@prisma/client';
 import Link from 'next/link';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
@@ -95,6 +96,8 @@ export default function ArticleList({
       method: 'PATCH',
       body: JSON.stringify({ publish: !publish }),
     });
+    revalidateTagFromClient('article');
+    revalidateTagFromClient(`article-${id}`);
     mutate();
   };
 
