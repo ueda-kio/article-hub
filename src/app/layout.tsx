@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   description: '会社メンバーの投稿記事を一覧で取得するサイト。',
 };
 
+export const fetchCache = 'default-cache';
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ja">
