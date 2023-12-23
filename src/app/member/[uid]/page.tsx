@@ -18,6 +18,7 @@ export default async function UserDetail({ params }: { params: { uid: string } }
     notFound();
   }
 
+  // TODO: MyPage と OtherPage で分ける？
   return (
     <>
       <h1 className="text-2xl font-bold">{isMyPage ? `おかえり！${user.name}` : `${user.name}のページだよ`}</h1>

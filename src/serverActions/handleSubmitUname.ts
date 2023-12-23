@@ -27,11 +27,13 @@ export default async function handleSubmitUname(site: Site, uname: string) {
           site,
           articles,
         }),
-        next: { tags: ['articles'] },
+        next: { tags: ['articles', `articles-${uid}`] },
       });
     })(),
   ]).finally(() => {
     revalidateTag('articles');
+    // TODO: ユーザーページで fetch している記事一覧は `articles-${uid}` であるため、記事全体の mutation に加えてユーザー毎の mutation も行う必要がある。冗長なのでどうにかしたい。
+    revalidateTag(`articles-${uid}`);
     revalidateTag(`users-${uid}`);
   });
   return Promise.resolve();
