@@ -8,19 +8,15 @@ import TextArea from './TextArea';
 export default function MyPage({ user, articles }: { user: User; articles: Article[] }) {
   const [isFetching, setIsFetching] = useState(false);
 
-  const toggleIsFetching = (isFetching: boolean) => {
-    setIsFetching(isFetching);
-  };
-
   return (
     <>
       <section>
-        <TextArea user={user} toggleIsFetching={toggleIsFetching} />
+        <TextArea user={user} setIsFetching={setIsFetching} />
       </section>
       <br />
       <section>
         <h2 className="text-xl font-semibold">Articles</h2>
-        <ArticleList fallback={articles} uid={user.id} isFetching={isFetching} />
+        <ArticleList fallback={articles} uid={user.id} isFetching={isFetching} setIsFetching={setIsFetching} />
       </section>
     </>
   );

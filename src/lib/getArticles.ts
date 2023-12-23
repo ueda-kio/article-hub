@@ -20,6 +20,7 @@ export async function getQiitaArticles(qiitaUname: FormDataEntryValue, uid: stri
         'Content-Type': 'application/json',
       },
     });
+    if (!res.ok) throw new Error('Failed to fetch Qiita articles.');
 
     const feed = (await res.json()) as {
       title?: string;
@@ -70,6 +71,8 @@ export async function getZennArticles(zennUname: FormDataEntryValue, uid: string
         published_at?: string;
       }[];
     };
+    if (!feed.articles) throw new Error('Failed to fetch Zenn articles.');
+
     const articles = feed.articles
       .map((item) => {
         const { path, title, liked_count, published_at } = item;

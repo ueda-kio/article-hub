@@ -1,61 +1,81 @@
 'use client';
 
 import useArticles from '@/hooks/useArticles';
-import { revalidateTagFromClient } from '@/serverActions/revalidate';
 import { Article } from '@prisma/client';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
-export default function ArticleList({ fallback, uid, isFetching }: { fallback: Article[]; uid: string; isFetching: boolean }) {
+export default function ArticleList({
+  fallback,
+  uid,
+  isFetching,
+  setIsFetching,
+}: {
+  fallback: Article[];
+  uid: string;
+  isFetching: boolean;
+  setIsFetching: Dispatch<SetStateAction<boolean>>;
+}) {
   const { data: articles, mutate } = useArticles(uid);
-  const [publishList, setPublishList] = useState<Article[]>(fallback.filter((article) => article.publish));
-  const [unpublishList, setUnpublishList] = useState<Article[]>(fallback.filter((article) => !article.publish));
+  const [articleLists, setArticleLists] = useState<{ publishList: Article[]; unpublishList: Article[] }>({
+    publishList: fallback.filter((article) => article.publish),
+    unpublishList: fallback.filter((article) => !article.publish),
+  });
 
   useEffect(() => {
     if (articles) {
-      setPublishList(articles.filter((article) => article.publish));
-      setUnpublishList(articles.filter((article) => !article.publish));
+      setArticleLists({
+        publishList: articles.filter((article) => article.publish),
+        unpublishList: articles.filter((article) => !article.publish),
+      });
+      setIsFetching(false);
     }
-    // console.log('mutate...');
-  }, [articles]);
+  }, [articles, setIsFetching]);
 
-  const handleClickToggleButton = async (id: string, publish: boolean) => {
+  const updateArticleLists = (id: string, publish: boolean) => {
+    const { publishList, unpublishList } = articleLists;
     if (publish) {
       const article = publishList.find((article) => article.id === id);
       if (article) {
-        setPublishList(publishList.filter((article) => article.id !== id));
-        setUnpublishList([article, ...unpublishList].sort((a, b) => (a.created_at < b.created_at ? 1 : -1)));
+        setArticleLists({
+          publishList: publishList.filter((article) => article.id !== id),
+          unpublishList: [article, ...unpublishList].sort((a, b) => (a.created_at < b.created_at ? 1 : -1)),
+        });
       }
     } else {
       const article = unpublishList.find((article) => article.id === id);
       if (article) {
-        setUnpublishList(unpublishList.filter((article) => article.id !== id));
-        setPublishList([article, ...publishList].sort((a, b) => (a.created_at < b.created_at ? 1 : -1)));
+        setArticleLists({
+          unpublishList: unpublishList.filter((article) => article.id !== id),
+          publishList: [article, ...publishList].sort((a, b) => (a.created_at < b.created_at ? 1 : -1)),
+        });
       }
     }
+  };
+
+  const handleClickToggleButton = async (id: string, publish: boolean) => {
+    updateArticleLists(id, publish);
 
     await fetch(`/api/article/${id}`, {
       method: 'PATCH',
       body: JSON.stringify({ publish: !publish }),
     });
-    revalidateTagFromClient('articles');
-    // TODO: ここで mutate() する必要ある？
     mutate();
   };
 
   return (
-    <>
-      {/* TODO: ローディングアニメーションをつけたい。 */}
+    <div className="relative">
+      {/* TODO: ローディングアニメーション */}
       {isFetching && (
-        <div className="fixed top-0 left-0 w-screen h-screen bg-gray-800 opacity-75 flex justify-center items-center">
+        <div className="absolute top-0 left-0 w-full h-full bg-gray-800 opacity-75 flex justify-center items-center">
           <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-64 w-64"></div>
         </div>
       )}
       <section>
         <h2 className="text-2xl font-bold">表示リスト</h2>
         <ul>
-          {publishList.length ? (
-            publishList.map((article) => (
+          {articleLists.publishList.length ? (
+            articleLists.publishList.map((article) => (
               <li key={article.id}>
                 <button
                   onClick={() => handleClickToggleButton(article.id, true)}
@@ -76,8 +96,8 @@ export default function ArticleList({ fallback, uid, isFetching }: { fallback: A
       <section>
         <h2 className="text-2xl font-bold">非表示リスト</h2>
         <ul>
-          {unpublishList.length ? (
-            unpublishList.map((article) => (
+          {articleLists.unpublishList.length ? (
+            articleLists.unpublishList.map((article) => (
               <li key={article.id}>
                 <button
                   onClick={() => handleClickToggleButton(article.id, false)}
@@ -95,7 +115,7 @@ export default function ArticleList({ fallback, uid, isFetching }: { fallback: A
           )}
         </ul>
       </section>
-    </>
+    </div>
   );
 }
 

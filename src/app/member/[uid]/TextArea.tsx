@@ -3,15 +3,15 @@
 import { articleSWRKey } from '@/hooks/useArticles';
 import handleSubmitUname from '@/serverActions/handleSubmitUname';
 import { User } from '@prisma/client';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { useSWRConfig } from 'swr';
 
 export default function TextArea({
   user: { id, qiita, zenn },
-  toggleIsFetching,
+  setIsFetching,
 }: {
   user: User;
-  toggleIsFetching: (isFetching: boolean) => void;
+  setIsFetching: Dispatch<SetStateAction<boolean>>;
 }) {
   const { mutate } = useSWRConfig();
   const [qiitaUname, setQiitaUname] = useState(qiita ?? '');
@@ -24,10 +24,9 @@ export default function TextArea({
     const uname = formData.get(site);
     if ((site !== 'qiita' && site !== 'zenn') || typeof uname !== 'string') return;
 
-    toggleIsFetching(true);
+    setIsFetching(true);
     await handleSubmitUname(site, uname);
     mutate(articleSWRKey(id));
-    toggleIsFetching(false);
   };
 
   return (

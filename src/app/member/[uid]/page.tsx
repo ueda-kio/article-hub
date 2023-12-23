@@ -2,8 +2,6 @@ import { getServerSession } from '@/auth';
 import { getArticles, getUsers } from '@/lib/getResources';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import ArticleList from './ArticleList';
-import TextArea from './TextArea';
 import MyPage from './MyPage';
 
 const getSessionId = async () => {
