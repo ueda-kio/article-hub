@@ -3,7 +3,7 @@ import { BASE_URL } from './baseUrl';
 
 export const getUsers = async (uid?: string) => {
   const url = `${BASE_URL}/api/user${uid ? `?id=${uid}` : ''}`;
-  const tag = uid ? `user-${uid}` : 'users';
+  const tag = uid ? `users-${uid}` : 'users';
   try {
     const res = await fetch(url, { next: { tags: [tag] } });
     const json = await res.json();
