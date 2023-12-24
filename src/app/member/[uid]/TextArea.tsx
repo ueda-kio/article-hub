@@ -1,6 +1,6 @@
 'use client';
 
-import { articleSWRKey } from '@/hooks/useArticles';
+import { articleSWRKey } from '@/hooks/useSwrArticles';
 import handleSubmitUname from '@/serverActions/handleSubmitUname';
 import { User } from '@prisma/client';
 import { Dispatch, SetStateAction, useState } from 'react';

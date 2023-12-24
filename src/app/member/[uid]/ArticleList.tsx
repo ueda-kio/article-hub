@@ -1,6 +1,6 @@
 'use client';
 
-import useArticles from '@/hooks/useArticles';
+import useArticles from '@/hooks/useSwrArticles';
 import { revalidateTagFromClient } from '@/serverActions/revalidate';
 import { Article } from '@prisma/client';
 import Link from 'next/link';
