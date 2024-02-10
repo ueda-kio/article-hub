@@ -18,17 +18,17 @@ function List({
   return (
     <section>
       <h2 className="text-2xl font-bold">{isPublish ? undefined : '非'}表示リスト</h2>
-      <ul>
+      <ul className="flex flex-col gap-2">
         {articleList.length ? (
           articleList.map((article) => (
-            <li key={article.id}>
+            <li key={article.id} className="flex gap-2 items-center">
               <button
                 onClick={() => handleClickToggleButton(article.id, isPublish)}
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
               >
                 非表示
               </button>
-              <Link href={article.url} target="_blank" passHref>
+              <Link href={article.url} className="text-blue-500 hover:underline" target="_blank" passHref>
                 {article.title}
               </Link>
             </li>
